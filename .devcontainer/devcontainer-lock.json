@@ -1,0 +1,9 @@
+{
+  "features": {
+    "ghcr.io/iTiPo/grok-with-opencode-go/grok-with-opencode-go:1.0.0": {
+      "version": "1.0.0",
+      "resolved": "ghcr.io/itipo/grok-with-opencode-go/grok-with-opencode-go@sha256:3ef78b167a2a8ef0ed5e04982f9f75c94275b2ccb395c31fbb3af1c86a506f9b",
+      "integrity": "sha256:3ef78b167a2a8ef0ed5e04982f9f75c94275b2ccb395c31fbb3af1c86a506f9b"
+    }
+  }
+}
