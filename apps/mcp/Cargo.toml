@@ -1,0 +1,16 @@
+[package]
+name = "tgautodocs"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+description = "tgautodocs: Telegram Bot API MCP server (Streamable HTTP)"
+
+[dependencies]
+rmcp = { version = "3.1.4", default-features = false, features = ["server", "macros", "transport-streamable-http-server"] }
+axum = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "signal"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

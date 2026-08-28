@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tgautodocs.dev/schemas/bot-api.schema.json",
+  "title": "Telegram Bot API reference dataset (tgautodocs)",
+  "description": "Machine-readable dataset derived from https://core.telegram.org/bots/api. One flat entities[] array holds three kinds of records: method, type, and topic.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entities"],
+  "properties": {
+    "entities": {
+      "description": "All records: documentation topics, API methods, and types, in document order of the source page.",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "$ref": "#/$defs/method" },
+          { "$ref": "#/$defs/type" },
+          { "$ref": "#/$defs/topic" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "field": {
+      "description": "One row of a method parameter table or a type field table.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type_display", "required", "description_md"],
+      "properties": {
+        "name": {
+          "description": "Exact parameter/field name from the docs' first column.",
+          "type": "string",
+          "minLength": 1
+        },
+        "type_display": {
+          "description": "Exact string from the docs' Type column, verbatim (e.g. \"Integer\", \"Integer or String\", \"Array of MessageEntity\", \"True\", \"InputFile\").",
+          "type": "string",
+          "minLength": 1
+        },
+        "required": {
+          "description": "True when the docs' Required column says \"Yes\". Only method parameter tables have a Required column; type field tables do not, so every type field is false (optionality is expressed inline in the description, kept verbatim).",
+          "type": "boolean"
+        },
+        "description_md": {
+          "description": "Verbatim description converted from HTML to markdown.",
+          "type": "string"
+        }
+      }
+    },
+    "method": {
+      "description": "An API method that can be called, e.g. sendMessage.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "description_md", "fields", "returns", "url"],
+      "properties": {
+        "id": {
+          "description": "CamelCase method name exactly as documented (e.g. sendMessage).",
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z0-9]*$"
+        },
+        "kind": {
+          "const": "method"
+        },
+        "description_md": {
+          "description": "The method's description, verbatim, converted from HTML to markdown. Includes any post-table notes (blockquotes) belonging to the method.",
+          "type": "string"
+        },
+        "fields": {
+          "description": "Parameter rows in table order. Empty for parameterless methods (getMe, close, logOut, ...).",
+          "type": "array",
+          "items": { "$ref": "#/$defs/field" }
+        },
+        "returns": {
+          "description": "Type named in the method's \"On success, ... is returned\" sentence, e.g. \"Message\", \"Array of Update\", \"True\". Uses the docs' own type vocabulary (\"True\" for methods documented as returning True).",
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "description": "Anchor URL on the official page.",
+          "type": "string",
+          "pattern": "^https://core\\.telegram\\.org/bots/api#[a-z0-9-]+$"
+        }
+      }
+    },
+    "type": {
+      "description": "A data structure, e.g. Message, User, InlineKeyboardMarkup. Includes abstract union types and fieldless types.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "description_md", "fields", "variants", "url"],
+      "properties": {
+        "id": {
+          "description": "CamelCase type name exactly as documented (e.g. MessageEntity).",
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*$"
+        },
+        "kind": {
+          "const": "type"
+        },
+        "description_md": {
+          "description": "The type's description, verbatim, converted from HTML to markdown. For union types this includes the subtype list.",
+          "type": "string"
+        },
+        "fields": {
+          "description": "Field rows in table order. Empty for fieldless types (VideoChatStarted, ForumTopicClosed, ...) and for union types.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/field" }
+        },
+        "variants": {
+          "description": "For abstract union types (\"It can be one of ...\"), the ids of the concrete subtypes, in the order listed on the page. Empty for all other types.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Za-z0-9]*$"
+          }
+        },
+        "url": {
+          "description": "Anchor URL on the official page.",
+          "type": "string",
+          "pattern": "^https://core\\.telegram\\.org/bots/api#[a-z0-9-]+$"
+        }
+      }
+    },
+    "topic": {
+      "description": "A documentation section (e.g. \"Making requests\"). Subtopics are folded into content_md, never separate records.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "content_md", "methods", "types", "url"],
+      "properties": {
+        "id": {
+          "description": "Kebab-case section anchor (e.g. making-requests).",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "kind": {
+          "const": "topic"
+        },
+        "title": {
+          "description": "Section heading exactly as printed on the page (e.g. \"Making requests\").",
+          "type": "string",
+          "minLength": 1
+        },
+        "content_md": {
+          "description": "The section's intro prose plus all folded-in subtopic prose (subtopic headings kept as ## headings), converted from HTML to markdown. Entity records are not duplicated here; they are referenced via methods[] and types[].",
+          "type": "string"
+        },
+        "methods": {
+          "description": "Ids of the method records belonging to this section, in page order.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][A-Za-z0-9]*$"
+          }
+        },
+        "types": {
+          "description": "Ids of the type records belonging to this section, in page order.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Za-z0-9]*$"
+          }
+        },
+        "url": {
+          "description": "Anchor URL on the official page.",
+          "type": "string",
+          "pattern": "^https://core\\.telegram\\.org/bots/api#[a-z0-9-]+$"
+        }
+      }
+    }
+  }
+}
