@@ -36,8 +36,11 @@ async fn main() -> Result<()> {
         "dataset loaded"
     );
 
-    let addr = std::env::var("TG_AUTODOCS_LISTEN_ADDR")
-        .unwrap_or_else(|_| DEFAULT_LISTEN_ADDR.to_string());
+    let addr = std::env::var("TG_AUTODOCS_LISTEN_ADDR").unwrap_or_else(|_| {
+        std::env::var("PORT")
+            .map(|p| format!("0.0.0.0:{p}"))
+            .unwrap_or_else(|_| DEFAULT_LISTEN_ADDR.to_string())
+    });
 
     let service = StreamableHttpService::new(
         {
