@@ -42,13 +42,25 @@ async fn main() -> Result<()> {
             .unwrap_or_else(|_| DEFAULT_LISTEN_ADDR.to_string())
     });
 
+    // Streamable HTTP rejects Host headers outside an allowlist (DNS rebinding
+    // protection). By default only loopback hosts are allowed; set
+    // TG_AUTODOCS_ALLOWED_HOSTS to a single hostname for a public deployment.
+    let allowed_host = std::env::var("TG_AUTODOCS_ALLOWED_HOSTS")
+        .ok()
+        .filter(|h| !h.trim().is_empty());
+
+    let mut config = StreamableHttpServerConfig::default().with_json_response(true);
+    if let Some(host) = allowed_host {
+        config = config.with_allowed_hosts([host]);
+    }
+
     let service = StreamableHttpService::new(
         {
             let loaded = Arc::clone(&loaded);
             move || Ok(TgAutoDocs::new(Arc::clone(&loaded)))
         },
         LocalSessionManager::default().into(),
-        StreamableHttpServerConfig::default().with_json_response(true),
+        config,
     );
 
     let router = Router::new().nest_service("/mcp", service);
