@@ -2,6 +2,6 @@
     "name": "Debian",
     "image": "mcr.microsoft.com/devcontainers/base:trixie",
     "features": {
-        "ghcr.io/iTiPo/grok-with-opencode-go/grok-with-opencode-go:1.0.0": {}
+        "ghcr.io/iTiPo/grok-with-opencode-go/grok-with-opencode-go:1.0.1": {}
     }
 }
