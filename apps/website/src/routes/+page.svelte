@@ -30,6 +30,11 @@
             <button type="button" onclick={copyUrl}>{copied ? 'Copied' : 'Copy'}</button>
         </div>
     </section>
+
+    <section>
+        <h2>Source code</h2>
+        <a href="https://github.com/iTiPo/tgautodocs">GitHub</a>
+    </section>
 </main>
 
 <style>
@@ -86,6 +91,17 @@
 
     p {
         margin: 0;
+    }
+
+    a {
+        color: #1a1a1e;
+        color: light-dark(#1a1a1e, #eaeaef);
+    }
+
+    a:focus-visible {
+        outline: 2px solid #1a1a1e;
+        outline: 2px solid light-dark(#1a1a1e, #eaeaef);
+        outline-offset: 2px;
     }
 
     .url-row {
