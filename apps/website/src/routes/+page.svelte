@@ -18,8 +18,8 @@
     <h1>tgautodocs</h1>
 
     <p class="lead">
-        An MCP server that gives AI agents the exact Telegram Bot API, so they build bots
-        correctly — without hallucinating methods or fields.
+        An MCP server that gives AI agents the exact Telegram Bot API, so they build bots correctly
+        — without hallucinating methods or fields.
     </p>
 
     <section>
@@ -43,7 +43,12 @@
         background: light-dark(#f7f7f8, #1a1a1e);
         color: #1a1a1e;
         color: light-dark(#1a1a1e, #eaeaef);
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        font-family:
+            system-ui,
+            -apple-system,
+            'Segoe UI',
+            Roboto,
+            sans-serif;
     }
 
     main {
