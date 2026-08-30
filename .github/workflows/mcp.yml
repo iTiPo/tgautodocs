@@ -1,9 +1,13 @@
-name: CI
+name: MCP CI
 
 on:
   pull_request:
+    paths:
+      - 'apps/mcp/**'
   push:
     branches: [main]
+    paths:
+      - 'apps/mcp/**'
 
 jobs:
   ci:
